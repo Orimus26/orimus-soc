@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ORIMUS BORDER SOC</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#05102B">
+
+  <!-- iOS-specific -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ORIMUS SOC">
+  <link rel="apple-touch-icon" href="./icon-180.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+
+  <!-- iOS splash screen fallback: solid navy -->
+  <meta name="format-detection" content="telephone=no">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #05102B;
+      min-height: 100%;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      /* Respect iOS safe areas in standalone mode */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    #root { min-height: 100vh; }
+    button { -webkit-appearance: none; appearance: none; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
+    }
+    /* Scrollbar - desktop only */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0A1838; }
+    ::-webkit-scrollbar-thumb { background: #1F61FC; }
+    ::-webkit-scrollbar-thumb:hover { background: #60C7F4; }
+
+    /* Pre-React loading screen (shown for ~1s on first load before React mounts) */
+    #preload {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: #05102B;
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      color: #6A7B95;
+      font-size: 11px;
+      letter-spacing: 2px;
+      z-index: 9999;
+      transition: opacity 0.3s;
+    }
+    #preload.hidden { opacity: 0; pointer-events: none; }
+    #preload img { width: 72px; height: 72px; margin-bottom: 20px; opacity: 0.9; }
+    #preload .bar {
+      width: 160px; height: 2px; background: rgba(96, 199, 244, 0.15); margin-top: 14px; overflow: hidden; position: relative;
+    }
+    #preload .bar::after {
+      content: ''; position: absolute; top: 0; left: -40%; height: 100%; width: 40%;
+      background: linear-gradient(90deg, transparent, #60C7F4, transparent);
+      animation: scan 1.2s infinite linear;
+    }
+    @keyframes scan { to { left: 100%; } }
+  </style>
+</head>
+<body>
+  <div id="preload">
+    <img src="./icon-192.png" alt="">
+    <div>ORIMUS // BORDER SOC v0.9</div>
+    <div class="bar"></div>
+  </div>
+  <div id="root"></div>
+
+  <!-- React + compiled app, loaded in order. Each is locally hosted / cached. -->
+  <script src="./react.min.js"></script>
+  <script src="./react-dom.min.js"></script>
+  <script src="./app.compiled.js"></script>
+
+  <script>
+    // Hide preload once React has mounted
+    (function () {
+      const pre = document.getElementById('preload');
+      const check = () => {
+        const root = document.getElementById('root');
+        if (root && root.children.length > 0) {
+          pre.classList.add('hidden');
+          setTimeout(() => pre.remove(), 300);
+        } else {
+          requestAnimationFrame(check);
+        }
+      };
+      requestAnimationFrame(check);
+    })();
+
+    // Register service worker for offline support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((e) => {
+          console.warn('SW register failed:', e);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
