@@ -1,16 +1,16 @@
 {
   "name": "ORIMUS Border SOC",
   "short_name": "ORIMUS SOC",
-  "description": "ORIMUS Border Security Operations Console — simulation build.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "ORIMUS Border Security Operations Console - simulation build.",
+  "start_url": "/orimus-soc/index.html",
+  "scope": "/orimus-soc/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#05102B",
   "theme_color": "#05102B",
   "icons": [
-    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
   ]
 }
